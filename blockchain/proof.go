@@ -3,23 +3,12 @@ package blockchain
 import (
 	"bytes"
 	"crypto/sha256"
-	"encoding/binary"
 	"fmt"
-	"log"
 	"math"
 	"math/big"
+
+	"github.com/gramos0211/blockchain-tut/util"
 )
-
-// Take data from block
-
-// create counter(nonce) which starts at 0
-
-// create the hash of the data plus the counter
-
-// check if the hash meets requirements
-
-// Reqs:
-// First few bytes must contain 0s
 
 const Difficulty = 18
 
@@ -42,8 +31,8 @@ func (pow *ProofOfWork) InitData(nonce int) []byte {
 		[][]byte{
 			pow.Block.PrevHash,
 			pow.Block.Data,
-			ToHex(int64(nonce)),
-			ToHex(int64(Difficulty)),
+			util.ToHex(int64(nonce)),
+			util.ToHex(int64(Difficulty)),
 		},
 		[]byte{})
 	return data
@@ -83,14 +72,4 @@ func (pow *ProofOfWork) Validate() bool {
 	intHash.SetBytes(hash[:])
 
 	return intHash.Cmp(pow.Target) == -1
-}
-
-func ToHex(num int64) []byte {
-	buff := new(bytes.Buffer)
-	err := binary.Write(buff, binary.BigEndian, num)
-	if err != nil {
-		log.Panic(err)
-	}
-
-	return buff.Bytes()
 }
